@@ -1,0 +1,6 @@
+pip-tools
+pip>=1.4
+requests
+setuptools>=0.9
+ujson
+wheel>=0.21
