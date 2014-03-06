@@ -19,8 +19,8 @@ data = {
 params = {
         'access_token': setting.USER_ACCESS_TOKEN,
         }
-r = requests.get('https://api.github.com/user', params=params)
-pprint(r.json())
+user = requests.get('https://api.github.com/user', params=params)
+pprint(user.json())
 
-r = requests.get('https://api.github.com/repos/toomore/grs/languages', params=params)
+r = requests.get(user.json()['repos_url'], params=params)
 pprint(r.json())
