@@ -1,0 +1,6 @@
+# -*- coding:utf8 -*-
+
+CLIENT_ID = ''
+CLIENT_SECRET = ''
+USER_ACCESS_TOKEN = ''
+

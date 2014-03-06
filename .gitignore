@@ -1,0 +1,8 @@
+*.pyc
+*.pylint
+*.swp
+.env
+build
+log
+setting.py
+venv
