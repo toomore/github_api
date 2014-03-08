@@ -11,6 +11,7 @@ class GithubAPI(object):
         self.api_url = 'https://api.github.com/'
         self.client_id = client_id
         self.client_secret = client_secret
+        self.session = requests.Session()
         self.token = token
 
     def authorize_url(self, state=None, *scope):
@@ -38,17 +39,27 @@ class GithubAPI(object):
         result = requests.post(url, data=data, headers=headers).json()
 
         if 'access_token' in result:
-            self.access_token = result['access_token']
+            self.token = result['access_token']
 
         return result
 
     def get_api(self, path, params=None):
+        return self._requests('GET', path, params)
+
+    def patch_api(self, path, params=None):
+        return self._requests('PATCH', path, params)
+
+    def _requests(self, method, path, params=None):
         if params:
             params['access_token'] = self.token
         else:
             params = {'access_token': self.token}
 
-        result = requests.get(os.path.join(self.api_url, path), params=params)
+        if method == 'GET':
+            result = self.session.get(os.path.join(self.api_url, path), params=params)
+        elif method == 'PATCH':
+            result = self.session.patch(os.path.join(self.api_url, path), data=params)
+
         return result.json()
 
 if __name__ == '__main__':
@@ -78,6 +89,8 @@ if __name__ == '__main__':
     g = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET)
     print g.authorize_url()
     print g.authorize_url(None, 'read:repo_hook','gist')
-    #print g.access_token('16f4dd89877ed4b4b74a')
+    #print g.access_token('05b942dfedb387b19912')
     g.token = setting.USER_ACCESS_TOKEN
     pprint(g.get_api('user'))
+    pprint(g.get_api('rate_limit'))
+    #pprint(g.patch_api('user', {'location': 'Kaohsiung.'}))
