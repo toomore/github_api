@@ -58,8 +58,8 @@ class GithubAPI(object):
         if method == 'GET':
             result = self.session.get(os.path.join(self.api_url, path), params=params)
         elif method == 'PATCH':
-            #TODO Update data by using patch method, but doesn't work now.
-            result = self.session.patch(os.path.join(self.api_url, path), data=params)
+            headers = {'Authorization': 'token %s' % self.token}
+            result = self.session.patch(os.path.join(self.api_url, path), data=json.dumps(params), headers=headers)
 
         return result.json()
 
@@ -89,9 +89,9 @@ if __name__ == '__main__':
     # ------ TEST GithubAPI ------ #
     g = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET)
     print g.authorize_url()
-    print g.authorize_url(None, 'read:repo_hook','gist')
-    #print g.access_token('05b942dfedb387b19912')
+    print g.authorize_url(None, 'read:repo_hook','gist', 'user')
+    #print g.access_token('642ec7bfc44bd26b6a97')
     g.token = setting.USER_ACCESS_TOKEN
     pprint(g.get_api('user'))
     pprint(g.get_api('rate_limit'))
-    #pprint(g.patch_api('user', {'location': 'Kaohsiung.'}))
+    pprint(g.patch_api('user', {'bio': 'I love Python.'}))
