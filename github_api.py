@@ -92,4 +92,4 @@ if __name__ == '__main__':
     g.token = setting.USER_ACCESS_TOKEN
     pprint(g.get_api('user'))
     pprint(g.get_api('rate_limit'))
-    pprint(g.patch_api('user', {'bio': 'I love Python.'}))
+    #pprint(g.patch_api('user', {'bio': 'I love Python.'}))
