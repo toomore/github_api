@@ -5,10 +5,12 @@ import ujson as json
 from pprint import pprint
 from uuid import uuid4
 
+
 class GithubAPI(object):
     def __init__(self, client_id, client_secret):
         self.client_id = client_id
         self.client_secret = client_secret
+        self.token = None
 
     def authorize_url(self, state=None, *scope):
         if not state:
@@ -32,8 +34,12 @@ class GithubAPI(object):
         if redirect_uri:
             data['redirect_uri'] = redirect_uri
 
-        result = requests.post(url, data=data, headers=headers)
-        return result.json()
+        result = requests.post(url, data=data, headers=headers).json()
+
+        if 'access_token' in result:
+            self.access_token = result['access_token']
+
+        return result
 
 if __name__ == '__main__':
     ## https://github.com/login/oauth/authorize?client_id=
