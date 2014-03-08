@@ -27,12 +27,13 @@ class GithubAPI(object):
         data = {'client_id': self.client_id,
                 'client_secret': self.client_secret,
                 'code': code}
+        headers = {'Accept': 'application/json'}
 
         if redirect_uri:
             data['redirect_uri'] = redirect_uri
 
-        result = requests.post(url, data=data)
-        return result.content
+        result = requests.post(url, data=data, headers=headers)
+        return result.json()
 
 if __name__ == '__main__':
     ## https://github.com/login/oauth/authorize?client_id=
@@ -60,4 +61,4 @@ if __name__ == '__main__':
     g = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET)
     print g.authorize_url()
     print g.authorize_url(None, 'read:repo_hook','gist')
-    print g.access_token('f7411e7ceabbad64b39b')
+    print g.access_token('16f4dd89877ed4b4b74a')
