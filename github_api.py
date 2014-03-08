@@ -50,16 +50,14 @@ class GithubAPI(object):
         return self._requests('PATCH', path, params)
 
     def _requests(self, method, path, params=None):
-        if params:
-            params['access_token'] = self.token
-        else:
-            params = {'access_token': self.token}
+        headers = {'Authorization': 'token %s' % self.token}
 
         if method == 'GET':
-            result = self.session.get(os.path.join(self.api_url, path), params=params)
+            result = self.session.get(os.path.join(self.api_url, path),
+                    params=params, headers=headers)
         elif method == 'PATCH':
-            headers = {'Authorization': 'token %s' % self.token}
-            result = self.session.patch(os.path.join(self.api_url, path), data=json.dumps(params), headers=headers)
+            result = self.session.patch(os.path.join(self.api_url, path),
+                    data=json.dumps(params), headers=headers)
 
         return result.json()
 
