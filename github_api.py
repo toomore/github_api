@@ -58,6 +58,7 @@ class GithubAPI(object):
         if method == 'GET':
             result = self.session.get(os.path.join(self.api_url, path), params=params)
         elif method == 'PATCH':
+            #TODO Update data by using patch method, but doesn't work now.
             result = self.session.patch(os.path.join(self.api_url, path), data=params)
 
         return result.json()
