@@ -1,16 +1,17 @@
 # -*- coding:utf8 -*-
+import os
 import requests
 import setting
 import ujson as json
-from pprint import pprint
 from uuid import uuid4
 
 
 class GithubAPI(object):
-    def __init__(self, client_id, client_secret):
+    def __init__(self, client_id, client_secret, token=None):
+        self.api_url = 'https://api.github.com/'
         self.client_id = client_id
         self.client_secret = client_secret
-        self.token = None
+        self.token = token
 
     def authorize_url(self, state=None, *scope):
         if not state:
@@ -41,7 +42,17 @@ class GithubAPI(object):
 
         return result
 
+    def get_api(self, path, params=None):
+        if params:
+            params['access_token'] = self.token
+        else:
+            params = {'access_token': self.token}
+
+        result = requests.get(os.path.join(self.api_url, path), params=params)
+        return result.json()
+
 if __name__ == '__main__':
+    from pprint import pprint
     ## https://github.com/login/oauth/authorize?client_id=
     ## code d38e574154d18dff15cb
 
@@ -67,4 +78,6 @@ if __name__ == '__main__':
     g = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET)
     print g.authorize_url()
     print g.authorize_url(None, 'read:repo_hook','gist')
-    print g.access_token('16f4dd89877ed4b4b74a')
+    #print g.access_token('16f4dd89877ed4b4b74a')
+    g.token = setting.USER_ACCESS_TOKEN
+    pprint(g.get_api('user'))
