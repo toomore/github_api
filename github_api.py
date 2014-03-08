@@ -3,15 +3,19 @@ import requests
 import setting
 import ujson as json
 from pprint import pprint
+from uuid import uuid4
 
 class GithubAPI(object):
     def __init__(self, client_id, client_secret):
         self.client_id = client_id
         self.client_secret = client_secret
 
-    def authorize_url(self, *scope):
-        url = 'https://github.com/login/oauth/authorize?client_id=%s' % \
-            self.client_id
+    def authorize_url(self, state=None, *scope):
+        if not state:
+            state = uuid4()
+
+        url = 'https://github.com/login/oauth/authorize' + \
+                '?client_id=%s&state=%s' % (self.client_id, state)
 
         if scope:
             url = url + '&scope=' + ','.join(scope)
@@ -44,4 +48,4 @@ if __name__ == '__main__':
     # ------ TEST GithubAPI ------ #
     g = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET)
     print g.authorize_url()
-    print g.authorize_url('read:repo_hook','gist')
+    print g.authorize_url(None, 'read:repo_hook','gist')
