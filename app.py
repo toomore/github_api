@@ -37,7 +37,7 @@ def github_api_token():
 def user():
     if 'token' in session:
         github_api.token = session['token']
-        result = u'%s' % github_api.get_api('user')
+        result = u'%s' % github_api.get_api('/user')
     else:
         result = u'Please Login!'
 
