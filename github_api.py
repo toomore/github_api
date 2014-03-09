@@ -100,3 +100,19 @@ if __name__ == '__main__':
     pprint(g.get_api('/rate_limit'))
     #pprint(g.patch_api('user', {'bio': 'I love Python.'}))
     pprint(g.get_api('/user/emails'))
+    #for i in g.get_api('/users?since=222'):
+    #    if i['site_admin']:
+    #        print i['id'], i['html_url']
+    #pprint(g.get_api('/users/toomore'))
+    #pprint(g.get_api('/user/repos'))
+
+    # ------ TEST Get User Language ------ #
+    from collections import Counter
+    result = g.get_api('/user/repos')
+    repos = [(i['name'], i['owner']['login'], i['fork']) for i in result]
+    languages = Counter()
+    for repo, owner, fork in repos:
+        if not fork and owner == 'toomore':
+            print repo, owner
+            languages.update(g.get_api('/repos/%s/%s/languages' % (owner, repo)))
+    print languages
