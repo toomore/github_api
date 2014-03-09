@@ -16,7 +16,7 @@ github_api = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET)
 @app.route("/login")
 def login():
     session['state'] = uuid4().hex
-    return redirect(github_api.authorize_url(session['state']))
+    return redirect(github_api.authorize_url(session['state'], 'user'))
 
 @app.route("/token")
 def github_api_token():
