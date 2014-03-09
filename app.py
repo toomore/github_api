@@ -37,8 +37,8 @@ def github_api_token():
 @app.route("/user")
 def user():
     if 'token' in session:
-        github_api = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET)
-        github_api.token = session['token']
+        github_api = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET,
+                session['token'])
         result = u'%s' % github_api.get_api('/user')
     else:
         result = u'Please Login!'
@@ -62,8 +62,8 @@ def hireable():
         </form>
         '''
     elif request.method == 'POST':
-        github_api = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET)
-        github_api.token = session['token']
+        github_api = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET,
+                session['token'])
         github_api.patch_api('/user', {'hireable': True})
         return redirect(url_for('user'))
 
