@@ -14,6 +14,12 @@ class GithubAPI(object):
         self.session = requests.Session()
         self.token = token
 
+    def __repr__(self):
+        return u'<GithubAPI client_id: %s, client_secret: %s, token: %s>' % \
+                (self.client_id[:7],
+                 self.client_secret[:7],
+                 self.token[:7] if self.token else None)
+
     def authorize_url(self, state=None, *scope):
         if not state:
             state = uuid4().hex

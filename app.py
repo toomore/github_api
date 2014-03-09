@@ -43,6 +43,10 @@ def user():
 
     return result
 
+@app.route("/viewtoken")
+def viewtoken():
+    return u'%s' % github_api
+
 @app.route("/user/hireable", methods=['GET', 'POST'])
 def hireable():
     if 'token' not in session:
