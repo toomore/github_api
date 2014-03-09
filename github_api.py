@@ -11,6 +11,7 @@ class GithubAPI(object):
         self.api_url = 'https://api.github.com/'
         self.client_id = client_id
         self.client_secret = client_secret
+        self.headers = {'Accept': 'application/vnd.github.v3+json'}
         self.session = requests.Session()
         self.token = token
 
@@ -37,12 +38,11 @@ class GithubAPI(object):
         data = {'client_id': self.client_id,
                 'client_secret': self.client_secret,
                 'code': code}
-        headers = {'Accept': 'application/json'}
 
         if redirect_uri:
             data['redirect_uri'] = redirect_uri
 
-        result = requests.post(url, data=data, headers=headers).json()
+        result = requests.post(url, data=data, headers=self.headers).json()
 
         if 'access_token' in result:
             self.token = result['access_token']
@@ -56,14 +56,14 @@ class GithubAPI(object):
         return self._requests('PATCH', path, params)
 
     def _requests(self, method, path, params=None):
-        headers = {'Authorization': 'token %s' % self.token}
+        self.headers['Authorization'] = 'token %s' % self.token
 
         if method == 'GET':
             result = self.session.get(urljoin(self.api_url, path),
-                    params=params, headers=headers)
+                    params=params, headers=self.headers)
         elif method == 'PATCH':
             result = self.session.patch(urljoin(self.api_url, path),
-                    data=json.dumps(params), headers=headers)
+                    data=json.dumps(params), headers=self.headers)
 
         return result.json()
 
@@ -94,8 +94,9 @@ if __name__ == '__main__':
     g = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET)
     print g.authorize_url()
     print g.authorize_url(None, 'read:repo_hook','gist', 'user')
-    #print g.access_token('642ec7bfc44bd26b6a97')
+    #print g.access_token('3ac36cb53c476f82592c')
     g.token = setting.USER_ACCESS_TOKEN
     pprint(g.get_api('/user'))
     pprint(g.get_api('/rate_limit'))
     #pprint(g.patch_api('user', {'bio': 'I love Python.'}))
+    pprint(g.get_api('/user/emails'))
