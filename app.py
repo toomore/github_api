@@ -43,5 +43,21 @@ def user():
 
     return result
 
+@app.route("/user/hireable", methods=['GET', 'POST'])
+def hireable():
+    if 'token' not in session:
+        return u'Please Login!'
+
+    if request.method == 'GET':
+        return u'''
+        <form method="POST">
+            <input type="submit">
+        </form>
+        '''
+    elif request.method == 'POST':
+        github_api.token = session['token']
+        github_api.patch_api('/user', {'hireable': True})
+        return redirect(url_for('user'))
+
 if __name__ == '__main__':
     app.run(debug=True)
