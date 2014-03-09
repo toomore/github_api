@@ -108,11 +108,15 @@ if __name__ == '__main__':
 
     # ------ TEST Get User Language ------ #
     from collections import Counter
+    g = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET,
+            setting.USER_ACCESS_TOKEN)
     result = g.get_api('/user/repos')
     repos = [(i['name'], i['owner']['login'], i['fork']) for i in result]
     languages = Counter()
-    for repo, owner, fork in repos:
+    for no, data in enumerate(repos):
+        repo, owner, fork = data
         if not fork and owner == 'toomore':
-            print repo, owner
-            languages.update(g.get_api('/repos/%s/%s/languages' % (owner, repo)))
-    print languages
+            feeds = g.get_api('/repos/%s/%s/languages' % (owner, repo))
+            print no, repo, owner, feeds
+            languages.update(feeds)
+    pprint(languages)
