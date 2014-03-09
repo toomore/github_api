@@ -16,7 +16,7 @@ class GithubAPI(object):
 
     def authorize_url(self, state=None, *scope):
         if not state:
-            state = uuid4()
+            state = uuid4().hex
 
         url = 'https://github.com/login/oauth/authorize' + \
                 '?client_id=%s&state=%s' % (self.client_id, state)

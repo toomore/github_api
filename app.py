@@ -6,34 +6,37 @@ from flask import request
 from flask import session
 from flask import url_for
 from github_api import GithubAPI
+from uuid import uuid4
+
 
 app = Flask(__name__)
 app.secret_key = setting.SESSION_KEY
+github_api = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET)
 
 @app.route("/login")
 def login():
-    github_api = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET)
-    return redirect(github_api.authorize_url())
+    session['state'] = uuid4().hex
+    return redirect(github_api.authorize_url(session['state']))
 
 @app.route("/token")
 def github_api_token():
     code = request.args.get('code')
     state = request.args.get('state')
     #return u'%s %s' % (code, state)
-    github_api = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET)
-    result = github_api.access_token(code)
 
-    if 'access_token' in result:
-        session['token'] = result['access_token']
-        return redirect(url_for('user'))
-    else:
-        return u'Wrong code.'
+    if state == session['state']:
+        result = github_api.access_token(code)
+
+        if 'access_token' in result:
+            session['token'] = result['access_token']
+            return redirect(url_for('user'))
+
+    return u'Wrong code. state: %s, %s' % (state, session['state'])
 
 @app.route("/user")
 def user():
     if 'token' in session:
-        github_api = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET,
-                session['token'])
+        github_api.token = session['token']
         result = u'%s' % github_api.get_api('user')
     else:
         result = u'Please Login!'
