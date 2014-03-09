@@ -1,8 +1,8 @@
 # -*- coding:utf8 -*-
-import os
 import requests
 import setting
 import ujson as json
+from urlparse import urljoin
 from uuid import uuid4
 
 
@@ -53,10 +53,10 @@ class GithubAPI(object):
         headers = {'Authorization': 'token %s' % self.token}
 
         if method == 'GET':
-            result = self.session.get(os.path.join(self.api_url, path),
+            result = self.session.get(urljoin(self.api_url, path),
                     params=params, headers=headers)
         elif method == 'PATCH':
-            result = self.session.patch(os.path.join(self.api_url, path),
+            result = self.session.patch(urljoin(self.api_url, path),
                     data=json.dumps(params), headers=headers)
 
         return result.json()
@@ -90,6 +90,6 @@ if __name__ == '__main__':
     print g.authorize_url(None, 'read:repo_hook','gist', 'user')
     #print g.access_token('642ec7bfc44bd26b6a97')
     g.token = setting.USER_ACCESS_TOKEN
-    pprint(g.get_api('user'))
-    pprint(g.get_api('rate_limit'))
+    pprint(g.get_api('/user'))
+    pprint(g.get_api('/rate_limit'))
     #pprint(g.patch_api('user', {'bio': 'I love Python.'}))
