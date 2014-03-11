@@ -1,22 +1,38 @@
 {% extends "base.html" %}
+{% block title%}{{result['name']}} - Github Info.{% endblock %}
 {% block content %}
-<img src="{{result['avatar_url']}}">
-<p>
-    {{result['name']}} / repo({{result['public_repos']}}) / gists({{result['public_gists']}})
-</p>
-<p>
-    following({{result['following']}}) / followers({{result['followers']}})
-</p>
-<p>
-    location: {{result['location']}}{% if result['company'] %} / {{result['company']}}{% endif %}
-</p>
-<p>
-    {{result['bio']}}
-</p>
+<div class="page-header">
+    <h1><img class="img-circle" src="{{result['avatar_url']}}">
+        {{result['name']}} <small>Python, Javascript, CSS</small></h1>
+</div>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h1 class="panel-title">{{result['name']}} <small>Python, Javascript, CSS</small></h1>
+    </div>
+    <div class="panel-body">
+        <p>
+             repo <span class="badge">{{result['public_repos']}}</span> / gists <span class="badge">{{result['public_gists']}}</span>
+        </p>
+        <p>
+            following <span class="badge">{{result['following']}}</span> / followers <span class="badge">{{result['followers']}}</span>
+        </p>
+        <p>
+            location: {{result['location']}}{% if result['company'] %} / {{result['company']}}{% endif %}
+        </p>
+        <p>
+            {{result['bio']}}
+        </p>
+    </div>
+</div>
 
-<div>
-{% for i in result%}
-    <b>{{i}}</b> / {{result[i]}}<br>
-{% endfor %}
+<div class="panel panel-warning">
+    <div class="panel-heading">
+        <h1 class="panel-title">Raw data info.</h1>
+    </div>
+    <div class="panel-body">
+    {% for i in result%}
+        <b>{{i}}</b> / {{result[i]}}<br>
+    {% endfor %}
+    </div>
 </div>
 {% endblock %}
