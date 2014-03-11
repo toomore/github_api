@@ -35,6 +35,7 @@ class GithubAPI(object):
 
     def access_token(self, code, redirect_uri=None):
         url = 'https://github.com/login/oauth/access_token'
+        headers = {'Accept': 'application/json'}
         data = {'client_id': self.client_id,
                 'client_secret': self.client_secret,
                 'code': code}
@@ -42,7 +43,7 @@ class GithubAPI(object):
         if redirect_uri:
             data['redirect_uri'] = redirect_uri
 
-        result = requests.post(url, data=data, headers=self.headers).json()
+        result = requests.post(url, data=data, headers=headers).json()
 
         if 'access_token' in result:
             self.token = result['access_token']
@@ -94,7 +95,7 @@ if __name__ == '__main__':
     g = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET)
     print g.authorize_url()
     print g.authorize_url(None, 'read:repo_hook','gist', 'user')
-    #print g.access_token('3ac36cb53c476f82592c')
+    #print g.access_token('d92ecf94496c6811e677')
     g.token = setting.USER_ACCESS_TOKEN
     pprint(g.get_api('/user'))
     pprint(g.get_api('/rate_limit'))

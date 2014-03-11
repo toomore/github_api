@@ -2,6 +2,7 @@
 import setting
 from flask import Flask
 from flask import redirect
+from flask import render_template
 from flask import request
 from flask import session
 from flask import url_for
@@ -39,7 +40,8 @@ def user():
     if 'token' in session:
         github_api = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET,
                 session['token'])
-        result = u'%s' % github_api.get_api('/user')
+        result = github_api.get_api('/user')
+        return render_template('user.html', result=result)
     else:
         result = u'Please Login!'
 
