@@ -2,6 +2,7 @@
 import requests
 import setting
 import ujson as json
+from collections import Counter
 from urlparse import urljoin
 from uuid import uuid4
 
@@ -68,6 +69,20 @@ class GithubAPI(object):
 
         return result.json()
 
+    def get_user_language(self, token_owner):
+        result = self.get_api('/user/repos')
+        repos = [(i['name'], i['owner']['login'], i['fork']) for i in result]
+
+        languages = Counter()
+        for no, data in enumerate(repos):
+            repo, owner, fork = data
+            if not fork and owner == token_owner:
+                feeds = self.get_api('/repos/%s/%s/languages' % (owner, repo))
+                ##print no, repo, owner, feeds
+                languages.update(feeds)
+
+        return languages
+
 if __name__ == '__main__':
     from pprint import pprint
     ## https://github.com/login/oauth/authorize?client_id=
@@ -108,16 +123,16 @@ if __name__ == '__main__':
     #pprint(g.get_api('/user/repos'))
 
     # ------ TEST Get User Language ------ #
-    from collections import Counter
     g = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET,
             setting.USER_ACCESS_TOKEN)
-    result = g.get_api('/user/repos')
-    repos = [(i['name'], i['owner']['login'], i['fork']) for i in result]
-    languages = Counter()
-    for no, data in enumerate(repos):
-        repo, owner, fork = data
-        if not fork and owner == 'toomore':
-            feeds = g.get_api('/repos/%s/%s/languages' % (owner, repo))
-            print no, repo, owner, feeds
-            languages.update(feeds)
-    pprint(languages)
+    #result = g.get_api('/user/repos')
+    #repos = [(i['name'], i['owner']['login'], i['fork']) for i in result]
+    #languages = Counter()
+    #for no, data in enumerate(repos):
+    #    repo, owner, fork = data
+    #    if not fork and owner == 'toomore':
+    #        feeds = g.get_api('/repos/%s/%s/languages' % (owner, repo))
+    #        print no, repo, owner, feeds
+    #        languages.update(feeds)
+    #pprint(languages)
+    print g.get_user_language('toomore')
