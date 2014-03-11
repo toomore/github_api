@@ -1,4 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
-<pre>{{result.name}}</pre>
+<img src="{{result['avatar_url']}}">
+<p>
+    {{result['name']}} / repo({{result['public_repos']}}) / gists({{result['public_gists']}})
+</p>
+<p>
+    following({{result['following']}}) / followers({{result['followers']}})
+</p>
+<p>
+    location: {{result['location']}}{% if result['company'] %} / {{result['company']}}{% endif %}
+</p>
+<p>
+    {{result['bio']}}
+</p>
+
+<div>
+{% for i in result%}
+    <b>{{i}}</b> / {{result[i]}}<br>
+{% endfor %}
+</div>
 {% endblock %}
