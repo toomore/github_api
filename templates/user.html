@@ -3,11 +3,11 @@
 {% block content %}
 <div class="page-header">
     <h1><img class="img-circle" src="{{result['avatar_url']}}">
-        {{result['name']}} <small>Python, Javascript, CSS</small></h1>
+        {{result['name']}} <small>{{result['language']}}</small></h1>
 </div>
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h1 class="panel-title">{{result['name']}} <small>Python, Javascript, CSS</small></h1>
+        <h1 class="panel-title">{{result['name']}} <small>{{result['language']}}</small></h1>
     </div>
     <div class="panel-body">
         <p>

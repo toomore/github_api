@@ -41,6 +41,7 @@ def user():
         github_api = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET,
                 session['token'])
         result = github_api.get_api('/user')
+        result['language'] = ', '.join([i for i, value in github_api.get_user_language(result['login']).most_common()])
         return render_template('user.html', result=result)
     else:
         result = u'Please Login!'
