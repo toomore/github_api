@@ -1,5 +1,7 @@
 # -*- coding:utf8 -*-
+import redis
 import setting
+import ujson as json
 from flask import Flask
 from flask import redirect
 from flask import render_template
@@ -12,6 +14,10 @@ from uuid import uuid4
 
 app = Flask(__name__)
 app.secret_key = setting.SESSION_KEY
+
+CACHE = redis.StrictRedis(host=setting.REDIS_HOST,
+                          port=setting.REDIS_POST,
+                          db=0)
 
 @app.route("/login")
 def login():
@@ -40,8 +46,15 @@ def user():
     if 'token' in session:
         github_api = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET,
                 session['token'])
-        result = github_api.get_api('/user')
-        result['language'] = ', '.join([i for i, value in github_api.get_user_language(result['login']).most_common()])
+        result = CACHE.get(u'github_api:user:%s' % session['token'])
+        if not result:
+            result = github_api.get_api('/user')
+            if 'language' not in result:
+                result['language'] = ', '.join([i for i, value in github_api.get_user_language(result['login']).most_common()])
+            CACHE.set(u'github_api:user:%s' % session['token'],
+                      json.dumps(result), 60)
+        else:
+            result = json.loads(result)
         return render_template('user.html', result=result)
     else:
         result = u'Please Login!'

@@ -1,6 +1,7 @@
 flask
 pip-tools
 pip>=1.4
+redis
 requests
 setuptools>=0.9
 ujson
