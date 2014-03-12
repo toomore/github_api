@@ -37,24 +37,45 @@ def github_api_token():
 
         if 'access_token' in result:
             session['token'] = result['access_token']
-            return redirect(url_for('user'))
+            data = render_user_data()
+            session['name'] = data['login']
+            return redirect(url_for('user', name=session['name']))
 
     return u'Wrong code. state: %s, %s' % (state, session['state'])
 
-@app.route("/user")
-def user():
-    if 'token' in session:
-        github_api = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET,
-                session['token'])
-        result = CACHE.get(u'github_api:user:%s' % session['token'])
-        if not result:
-            result = github_api.get_api('/user')
-            if 'language' not in result:
-                result['language'] = ', '.join([i for i, value in github_api.get_user_language(result['login']).most_common()])
-            CACHE.set(u'github_api:user:%s' % session['token'],
-                      json.dumps(result), 60)
+def render_user_data(name=None, find_language=False):
+    github_api = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET,
+            session['token'])
+    if name:
+        key_name = u'github_api:user:%s'
+    else:
+        key_name = u'github_api:user:auth:%s'
+
+    result = CACHE.get(key_name % name)
+
+    if not result:
+        if name:
+            result = github_api.get_api('/users/%s' % name)
         else:
-            result = json.loads(result)
+            result = github_api.get_api('/user')
+
+        if find_language and 'language' not in result:
+            result['language'] = ', '.join([i for i, value in github_api.get_user_language(result['login']).most_common()])
+
+        CACHE.set(key_name % name, json.dumps(result), 300)
+    else:
+        result = json.loads(result)
+
+    return result
+
+@app.route("/user/<name>")
+def user(name):
+    if 'token' in session:
+        if name == session['name']:
+            result = render_user_data(find_language=True)
+        else:
+            result = render_user_data(name)
+
         return render_template('user.html', result=result)
     else:
         result = u'Please Login!'
