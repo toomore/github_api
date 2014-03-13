@@ -84,6 +84,9 @@ def user(name):
         else:
             result = render_user_data(name)
 
+        if name != result['login']:
+            return redirect(url_for('user', name=result['login']))
+
         return render_template('user.html', result=result)
     else:
         #return redirect(url_for('login'))
