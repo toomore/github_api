@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 {% block title%}{{result['name']}} - Github Info.{% endblock %}
+{% block css %}
+<style type="text/css">
+    .img-circle {
+        width: 80px;
+    }
+</style>
+{% endblock %}
 {% block content %}
 <div class="page-header">
     <h1><img class="img-circle" src="{{result['avatar_url']}}">
@@ -22,6 +29,16 @@
         <p>
             {{result['bio']}}
         </p>
+    </div>
+</div>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h1 class="panel-title">Following <small>{{result['following']|length}}</small></h1>
+    </div>
+    <div class="panel-body">
+        {% for i in result['following'] %}
+            <a href="{{url_for('user', name=i.login)}}"><img class="img-circle" src="{{i.avatar_url}}"></a>
+        {% endfor %}
     </div>
 </div>
 
