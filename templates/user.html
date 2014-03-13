@@ -14,7 +14,7 @@
              repo <span class="badge">{{result['public_repos']}}</span> / gists <span class="badge">{{result['public_gists']}}</span>
         </p>
         <p>
-            following <span class="badge">{{result['following']}}</span> / followers <span class="badge">{{result['followers']}}</span>
+            following <span class="badge">{{result['following']|length}}</span> / followers <span class="badge">{{result['followers']}}</span>
         </p>
         <p>
             location: {{result['location']}}{% if result['company'] %} / {{result['company']}}{% endif %}

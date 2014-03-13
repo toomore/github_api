@@ -107,15 +107,15 @@ if __name__ == '__main__':
     #pprint(r.json())
 
     # ------ TEST GithubAPI ------ #
-    g = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET)
-    print g.authorize_url()
-    print g.authorize_url(None, 'read:repo_hook','gist', 'user')
-    #print g.access_token('d92ecf94496c6811e677')
-    g.token = setting.USER_ACCESS_TOKEN
-    pprint(g.get_api('/user'))
-    pprint(g.get_api('/rate_limit'))
-    #pprint(g.patch_api('user', {'bio': 'I love Python.'}))
-    pprint(g.get_api('/user/emails'))
+    #g = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET)
+    #print g.authorize_url()
+    #print g.authorize_url(None, 'read:repo_hook','gist', 'user')
+    ##print g.access_token('d92ecf94496c6811e677')
+    #g.token = setting.USER_ACCESS_TOKEN
+    #pprint(g.get_api('/user'))
+    #pprint(g.get_api('/rate_limit'))
+    ##pprint(g.patch_api('user', {'bio': 'I love Python.'}))
+    #pprint(g.get_api('/user/emails'))
     #for i in g.get_api('/users?since=222'):
     #    if i['site_admin']:
     #        print i['id'], i['html_url']
@@ -123,8 +123,8 @@ if __name__ == '__main__':
     #pprint(g.get_api('/user/repos'))
 
     # ------ TEST Get User Language ------ #
-    g = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET,
-            setting.USER_ACCESS_TOKEN)
+    #g = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET,
+    #        setting.USER_ACCESS_TOKEN)
     #result = g.get_api('/user/repos')
     #repos = [(i['name'], i['owner']['login'], i['fork']) for i in result]
     #languages = Counter()
@@ -135,4 +135,9 @@ if __name__ == '__main__':
     #        print no, repo, owner, feeds
     #        languages.update(feeds)
     #pprint(languages)
-    print g.get_user_language('toomore')
+    #print g.get_user_language('toomore')
+
+    # ------ Test get following ------ #
+    g = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET,
+            setting.USER_ACCESS_TOKEN)
+    pprint(g.get_api('/users/%s/following' % 'toomore'))

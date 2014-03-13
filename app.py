@@ -47,11 +47,11 @@ def render_user_data(name=None, find_language=False):
     github_api = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET,
             session['token'])
     if name:
-        key_name = u'github_api:user:%s'
+        key_name = u'github_api:user:%s' % name
     else:
-        key_name = u'github_api:user:auth:%s'
+        key_name = u'github_api:user:auth:%s' % session['name']
 
-    result = CACHE.get(key_name % name)
+    result = CACHE.get(key_name)
 
     if not result:
         if name:
@@ -59,13 +59,17 @@ def render_user_data(name=None, find_language=False):
         else:
             result = github_api.get_api('/user')
 
-        user_language = CACHE.get('github_api:user:language:%s' % name)
+        language_key_name = 'github_api:user:language:%s' % (name if name else session['name'])
+
+        user_language = CACHE.get(language_key_name)
         if find_language and not user_language and 'language' not in result:
             result['language'] = ', '.join([i for i, value in github_api.get_user_language(result['login']).most_common()])
-            user_language = CACHE.set('github_api:user:language:%s' % name,
-                    result['language'], 60*60)
+            user_language = CACHE.set(language_key_name, result['language'], 60*60)
 
-        CACHE.set(key_name % name, json.dumps(result), 300)
+        #user following
+        result['following'] = github_api.get_api('/users/%s/following' % (name if name else session['name']))
+
+        CACHE.set(key_name, json.dumps(result), 60)
     else:
         result = json.loads(result)
 
