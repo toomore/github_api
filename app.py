@@ -59,8 +59,11 @@ def render_user_data(name=None, find_language=False):
         else:
             result = github_api.get_api('/user')
 
-        if find_language and 'language' not in result:
+        user_language = CACHE.get('github_api:user:language:%s' % name)
+        if find_language and not user_language and 'language' not in result:
             result['language'] = ', '.join([i for i, value in github_api.get_user_language(result['login']).most_common()])
+            user_language = CACHE.set('github_api:user:language:%s' % name,
+                    result['language'], 600)
 
         CACHE.set(key_name % name, json.dumps(result), 300)
     else:
