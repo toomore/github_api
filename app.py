@@ -68,8 +68,16 @@ def render_user_data(name=None, find_language=False):
 
     return result
 
+@app.route("/user")
+@app.route("/user/")
 @app.route("/user/<name>")
 def user(name):
+    if name == 'None':  ## No 'None' account id in github.[safe]
+        if 'name' in session:
+            return redirect(url_for('user', name=session['name']))
+        else:
+            return redirect(url_for('login'))
+
     if 'token' in session:
         if name == session['name']:
             result = render_user_data(find_language=True)
