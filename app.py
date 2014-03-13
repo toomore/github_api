@@ -66,8 +66,11 @@ def render_user_data(name=None, find_language=False):
             result['language'] = ', '.join([i for i, value in github_api.get_user_language(result['login']).most_common()])
             user_language = CACHE.set(language_key_name, result['language'], 60*60)
 
+        result['language'] = user_language
+
         #user following
-        result['following'] = github_api.get_api('/users/%s/following' % (name if name else session['name']))
+        result['following'] = github_api.get_api('/users/%s/following?per_page=%s' % (name if name else session['name'], result['following']))
+        result['followers'] = github_api.get_api('/users/%s/followers?per_page=%s' % (name if name else session['name'], result['followers']))
 
         CACHE.set(key_name, json.dumps(result), 60)
     else:
