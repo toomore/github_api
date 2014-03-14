@@ -64,17 +64,17 @@ def render_user_data(name=None, find_language=False):
         user_language = CACHE.get(language_key_name)
         if find_language and not user_language and 'language' not in result:
             result['language'] = ', '.join([i for i, value in github_api.get_user_language(result['login']).most_common()])
-            user_language = CACHE.set(language_key_name, result['language'], 60*60)
-
-        result['language'] = user_language
+            CACHE.set(language_key_name, result['language'], 60*60)
+        else:
+            result['language'] = user_language
 
         #user following
         if name:
-            result['following'] = github_api.get_api('/users/%s/following?per_page=%s' % (name, result['following']))
-            result['followers'] = github_api.get_api('/users/%s/followers?per_page=%s' % (name, result['followers']))
+            result['following_list'] = github_api.get_api('/users/%s/following?per_page=%s' % (name, result['following']))
+            result['followers_list'] = github_api.get_api('/users/%s/followers?per_page=%s' % (name, result['followers']))
         else:
-            result['following'] = github_api.get_api('/user/following?per_page=%s' % result['following'])
-            result['followers'] = github_api.get_api('/user/followers?per_page=%s' % result['followers'])
+            result['following_list'] = github_api.get_api('/user/following?per_page=%s' % result['following'])
+            result['followers_list'] = github_api.get_api('/user/followers?per_page=%s' % result['followers'])
 
         CACHE.set(key_name, json.dumps(result), 60)
     else:

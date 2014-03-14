@@ -21,7 +21,7 @@
              repo <span class="badge">{{result['public_repos']}}</span> / gists <span class="badge">{{result['public_gists']}}</span>
         </p>
         <p>
-            following <span class="badge">{{result['following']|length}}</span> / followers <span class="badge">{{result['followers']|length}}</span>
+            following <span class="badge">{{result['following']}}</span> / followers <span class="badge">{{result['followers']}}</span>
         </p>
         <p>
             location: {{result['location']}}{% if result['company'] %} / {{result['company']}}{% endif %}
@@ -33,20 +33,20 @@
 </div>
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h1 class="panel-title">Following <small>{{result['following']|length}}</small></h1>
+        <h1 class="panel-title">Following <small>{{result['following']}}</small></h1>
     </div>
     <div class="panel-body">
-        {% for i in result['following'] %}
+        {% for i in result['following_list'] %}
             <a href="{{url_for('user', name=i.login)}}"><img class="img-circle" src="{{i.avatar_url}}"></a>
         {% endfor %}
     </div>
 </div>
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h1 class="panel-title">Followers <small>{{result['followers']|length}}</small></h1>
+        <h1 class="panel-title">Followers <small>{{result['followers']}}</small></h1>
     </div>
     <div class="panel-body">
-        {% for i in result['followers'] %}
+        {% for i in result['followers_list'] %}
             <a href="{{url_for('user', name=i.login)}}"><img class="img-circle" src="{{i.avatar_url}}"></a>
         {% endfor %}
     </div>
