@@ -49,7 +49,7 @@ def render_user_data(name=None, find_language=False):
     if name:
         key_name = u'github_api:user:%s' % name
     else:
-        key_name = u'github_api:user:auth:%s' % session['name']
+        key_name = u'github_api:user:auth:%s' % session['token']
 
     result = CACHE.get(key_name)
 
@@ -59,7 +59,7 @@ def render_user_data(name=None, find_language=False):
         else:
             result = github_api.get_api('/user')
 
-        language_key_name = 'github_api:user:language:%s' % (name if name else session['name'])
+        language_key_name = 'github_api:user:language:%s' % (name if name else session['token'])
 
         user_language = CACHE.get(language_key_name)
         if find_language and not user_language and 'language' not in result:
@@ -69,8 +69,12 @@ def render_user_data(name=None, find_language=False):
         result['language'] = user_language
 
         #user following
-        result['following'] = github_api.get_api('/users/%s/following?per_page=%s' % (name if name else session['name'], result['following']))
-        result['followers'] = github_api.get_api('/users/%s/followers?per_page=%s' % (name if name else session['name'], result['followers']))
+        if name:
+            result['following'] = github_api.get_api('/users/%s/following?per_page=%s' % (name, result['following']))
+            result['followers'] = github_api.get_api('/users/%s/followers?per_page=%s' % (name, result['followers']))
+        else:
+            result['following'] = github_api.get_api('/user/following?per_page=%s' % result['following'])
+            result['followers'] = github_api.get_api('/user/followers?per_page=%s' % result['followers'])
 
         CACHE.set(key_name, json.dumps(result), 60)
     else:
@@ -78,11 +82,11 @@ def render_user_data(name=None, find_language=False):
 
     return result
 
-@app.route("/user")
-@app.route("/user/")
+@app.route("/user", defaults={'name': None})
+@app.route("/user/", defaults={'name': None})
 @app.route("/user/<name>")
 def user(name):
-    if name == 'None':  ## No 'None' account id in github.[safe]
+    if name is None:  ## No 'None' account id in github.[safe]
         if 'name' in session:
             return redirect(url_for('user', name=session['name']))
         else:
