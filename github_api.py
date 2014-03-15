@@ -73,7 +73,7 @@ class GithubAPI(GithubAPIBase):
     def __init__(self, *args, **kwargs):
         super(GithubAPI, self).__init__(*args, **kwargs)
 
-    def get_user_language(self, token_owner):
+    def get_user_language(self, token_owner, forked=False):
         #result = self.get_api('/user/repos')
         result = self.get_api('/users/%s/repos' % token_owner)
         repos = [(i['name'], i['owner']['login'], i['fork']) for i in result]
@@ -81,7 +81,7 @@ class GithubAPI(GithubAPIBase):
         languages = Counter()
         for no, data in enumerate(repos):
             repo, owner, fork = data
-            if not fork and owner == token_owner:
+            if forked == fork and owner == token_owner:
                 feeds = self.get_api('/repos/%s/%s/languages' % (owner, repo))
                 ##print no, repo, owner, feeds
                 languages.update(feeds)
@@ -151,4 +151,7 @@ if __name__ == '__main__':
     # ------ TEST Get User Language ------ #
     g = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET,
             setting.USER_ACCESS_TOKEN)
+    # Not forked.
     print g.get_user_language('toomore')
+    # Forked.
+    print g.get_user_language('toomore', True)
