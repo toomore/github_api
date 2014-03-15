@@ -74,7 +74,8 @@ class GithubAPI(GithubAPIBase):
         super(GithubAPI, self).__init__(*args, **kwargs)
 
     def get_user_language(self, token_owner):
-        result = self.get_api('/user/repos')
+        #result = self.get_api('/user/repos')
+        result = self.get_api('/users/%s/repos' % token_owner)
         repos = [(i['name'], i['owner']['login'], i['fork']) for i in result]
 
         languages = Counter()
@@ -113,8 +114,9 @@ if __name__ == '__main__':
     # ------ TEST GithubAPI ------ #
     #g = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET)
     #print g.authorize_url()
+    #print g.authorize_url(None, 'user')
     #print g.authorize_url(None, 'read:repo_hook','gist', 'user')
-    ##print g.access_token('d92ecf94496c6811e677')
+    #print g.access_token('d92ecf94496c6811e677')
     #g.token = setting.USER_ACCESS_TOKEN
     #pprint(g.get_api('/user'))
     #pprint(g.get_api('/rate_limit'))
@@ -142,6 +144,11 @@ if __name__ == '__main__':
     #print g.get_user_language('toomore')
 
     # ------ Test get following ------ #
+    #g = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET,
+    #        setting.USER_ACCESS_TOKEN)
+    #pprint(g.get_api('/users/%s/following' % 'toomore'))
+
+    # ------ TEST Get User Language ------ #
     g = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET,
             setting.USER_ACCESS_TOKEN)
-    pprint(g.get_api('/users/%s/following' % 'toomore'))
+    print g.get_user_language('toomore')
