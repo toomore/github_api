@@ -96,7 +96,7 @@ def user(name):
         if name == session['name']:
             result = render_user_data(find_language=True)
         else:
-            result = render_user_data(name)
+            result = render_user_data(name, True)
 
         if name != result['login']:
             return redirect(url_for('user', name=result['login']))
