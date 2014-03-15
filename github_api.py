@@ -7,7 +7,7 @@ from urlparse import urljoin
 from uuid import uuid4
 
 
-class GithubAPI(object):
+class GithubAPIBase(object):
     def __init__(self, client_id, client_secret, token=None):
         self.api_url = 'https://api.github.com/'
         self.client_id = client_id
@@ -68,6 +68,10 @@ class GithubAPI(object):
                     data=json.dumps(params), headers=self.headers)
 
         return result.json()
+
+class GithubAPI(GithubAPIBase):
+    def __init__(self, *args, **kwargs):
+        super(GithubAPI, self).__init__(*args, **kwargs)
 
     def get_user_language(self, token_owner):
         result = self.get_api('/user/repos')
