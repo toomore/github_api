@@ -20,6 +20,14 @@ CACHE = redis.StrictRedis(host=setting.REDIS_HOST,
                           port=setting.REDIS_POST,
                           db=0)
 
+@app.template_filter('most_common')
+def most_common(data, n=None):
+    if isinstance(data, basestring):
+        data = json.loads(data)
+
+    data = Counter(data)
+    return data.most_common(n)
+
 @app.route("/login")
 def login():
     session['state'] = uuid4().hex

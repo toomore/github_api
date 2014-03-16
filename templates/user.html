@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title%}{{result['name']}} - Github Info.{% endblock %}
+{% block title%}{{result['name']|default(result['login'])}} - Github Info.{% endblock %}
 {% block css %}
 <style type="text/css">
     .img-circle {
@@ -10,11 +10,11 @@
 {% block content %}
 <div class="page-header">
     <h1><img class="img-circle" src="{{result['avatar_url']}}">
-        {{result['name']}} <small>{{result['language']|default('', True)}}</small></h1>
+        {{result['name']|default(result['login'])}} <small>{{result['language']|most_common|default('', True)}}</small></h1>
 </div>
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h1 class="panel-title">{{result['name']}} <small>{{result['language']|default('', True)}}</small></h1>
+        <h1 class="panel-title">{{result['name']}} <small>{{result['language']|most_common|default('', True)}}</small></h1>
     </div>
     <div class="panel-body">
         <p>
