@@ -26,7 +26,7 @@ def most_common(data, n=None):
         data = json.loads(data)
 
     data = Counter(data)
-    return data.most_common(n)
+    return [language for language, value in data.most_common(n)]
 
 @app.route("/login")
 def login():

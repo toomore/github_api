@@ -10,11 +10,11 @@
 {% block content %}
 <div class="page-header">
     <h1><img class="img-circle" src="{{result['avatar_url']}}">
-        {{result['name']|default(result['login'])}} <small>{{result['language']|most_common|default('', True)}}</small></h1>
+        {{result['name']|default(result['login'])}} <small>{{result['language']|most_common|join(', ')|default('', True)}}</small></h1>
 </div>
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h1 class="panel-title">{{result['name']}} <small>{{result['language']|most_common|default('', True)}}</small></h1>
+        <h1 class="panel-title">{{result['name']}} <small>{{result['language']|most_common|join(', ')|default('', True)}}</small></h1>
     </div>
     <div class="panel-body">
         <p>
