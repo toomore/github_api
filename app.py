@@ -2,6 +2,7 @@
 import redis
 import setting
 import ujson as json
+from collections import Counter
 from flask import Flask
 from flask import redirect
 from flask import render_template
@@ -63,10 +64,11 @@ def render_user_data(name=None, find_language=False):
 
         user_language = CACHE.get(language_key_name)
         if find_language and not user_language and 'language' not in result:
-            result['language'] = ', '.join([i for i, value in github_api.get_user_language(result['login']).most_common()])
+            #result['language'] = ', '.join([i for i, value in github_api.get_user_language(result['login']).most_common()])
+            result['language'] = json.dumps(github_api.get_user_language(result['login']))
             CACHE.set(language_key_name, result['language'], 60*60)
         else:
-            result['language'] = user_language
+            result['language'] = json.loads(user_language)
 
         #user following
         if name:
