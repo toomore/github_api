@@ -78,13 +78,19 @@ def render_user_data(name=None, find_language=False):
         else:
             result['language'] = json.loads(user_language)
 
-        #user following
         if name:
+            #user following
             result['following_list'] = github_api.get_api('/users/%s/following?per_page=%s' % (name, result['following']))
             result['followers_list'] = github_api.get_api('/users/%s/followers?per_page=%s' % (name, result['followers']))
+            #user repos
+            result['repos_list'] = github_api.get_api('/users/%s/repos?per_page=%s&sort=updated' % \
+                    (name, result['public_repos']))
         else:
+            #user following
             result['following_list'] = github_api.get_api('/user/following?per_page=%s' % result['following'])
             result['followers_list'] = github_api.get_api('/user/followers?per_page=%s' % result['followers'])
+            #user repos
+            result['repos_list'] = github_api.get_api('/user/repos?per_page=%s&sort=updated' % result['public_repos'])
 
         CACHE.set(key_name, json.dumps(result), 60)
     else:

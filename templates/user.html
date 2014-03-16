@@ -51,6 +51,25 @@
         {% endfor %}
     </div>
 </div>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h1 class="panel-title">Repos <small>{{result['repos_list']|length}}</small></h1>
+    </div>
+    <div class="panel-body">
+        <ol>
+        {% for i in result['repos_list']%}
+        <li>[{{i.language}}] <a href="{{i.url}}">{{i.name}}</a> / {{i.updated_at}} / {{i.pushed_at}}
+                <ul>
+                    <li>{{i.description}}</li>
+                    {% if i.fork %}
+                        <li>Forked from {{i.full_name}}</li>
+                    {% endif %}
+                </ul>
+            </li>
+        {% endfor %}
+        </ol>
+    </div>
+</div>
 
 <div class="panel panel-warning">
     <div class="panel-heading">
