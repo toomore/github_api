@@ -58,7 +58,7 @@
     <div class="panel-body">
         <ol>
         {% for i in result['repos_list']%}
-        <li>[{{i.language}}] <a href="{{i.url}}">{{i.name}}</a> / {{i.updated_at}} / {{i.pushed_at}}
+        <li><label class="label label-success">{{i.language}}</label> <a href="{{i.url}}">{{i.name}}</a> / {{i.updated_at}} / {{i.pushed_at}}
                 <ul>
                     <li>{{i.description}}</li>
                     {% if i.fork %}
