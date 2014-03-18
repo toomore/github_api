@@ -88,6 +88,15 @@ class GithubAPI(GithubAPIBase):
 
         return languages
 
+    def get_user_brief_language(self, owner, forked=False):
+        result = self.get_api('/users/%s/repos' % owner)
+        languages = Counter()
+        for i in result:
+            if i['fork'] == forked and i['owner']['login'] == owner:
+                languages.update({i['language']: 1})
+
+        return languages
+
 if __name__ == '__main__':
     from pprint import pprint
     ## https://github.com/login/oauth/authorize?client_id=
@@ -149,9 +158,17 @@ if __name__ == '__main__':
     #pprint(g.get_api('/users/%s/following' % 'toomore'))
 
     # ------ TEST Get User Language ------ #
+    #g = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET,
+    #        setting.USER_ACCESS_TOKEN)
+    ## Not forked.
+    #print g.get_user_language('toomore')
+    ## Forked.
+    #print g.get_user_language('toomore', True)
+
+    # ------ TEST Get User Brief Language ------ #
     g = GithubAPI(setting.CLIENT_ID, setting.CLIENT_SECRET,
             setting.USER_ACCESS_TOKEN)
     # Not forked.
-    print g.get_user_language('toomore')
+    print g.get_user_brief_language('toomore')
     # Forked.
-    print g.get_user_language('toomore', True)
+    print g.get_user_brief_language('toomore', True)
