@@ -5,4 +5,5 @@ redis
 requests
 setuptools>=0.9
 ujson
+uwsgi
 wheel>=0.21
