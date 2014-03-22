@@ -30,11 +30,32 @@
             {{result['bio']}}
         </p>
         <p>
-            {%if result['hireable'] %}<label class="label label-info">Hireable</label>{% endif %}
-            {%if result['site_admin'] %}<label class="label label-info">Site Admin</label>{% endif %}
+            {%if result['hireable'] %}<label class="label label-primary">Hireable</label>{% endif %}
+            {%if result['site_admin'] %}<label class="label label-danger">Site Admin</label>{% endif %}
         </p>
     </div>
 </div>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h1 class="panel-title">Repos <small>{{result['repos_list']|length}}</small></h1>
+    </div>
+    <div class="panel-body">
+        <ol>
+        {% for i in result['repos_list']%}
+        <li>{% if i.language %}<label class="label label-success">{{i.language}}</label>{%endif%}
+            {% if i.fork %}<label class="label label-warning">Fork</label>{% endif %}
+            <a href="{{i.url}}">{{i.name}}</a> / {{i.updated_at}} / {{i.pushed_at}}
+                <ul>
+                    <li>{{i.description}}</li>
+                    <li><a href="{{i.html_url}}">{{i.html_url}}</a></li>
+                </ul>
+            </li>
+        {% endfor %}
+        </ol>
+    </div>
+</div>
+
 <div class="panel panel-info">
     <div class="panel-heading">
         <h1 class="panel-title">Following <small>{{result['following']}}</small></h1>
@@ -53,25 +74,6 @@
         {% for i in result['followers_list'] %}
             <a href="{{url_for('user', name=i.login)}}"><img class="img-circle" src="{{i.avatar_url}}"></a>
         {% endfor %}
-    </div>
-</div>
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h1 class="panel-title">Repos <small>{{result['repos_list']|length}}</small></h1>
-    </div>
-    <div class="panel-body">
-        <ol>
-        {% for i in result['repos_list']%}
-        <li>{% if i.language %}<label class="label label-success">{{i.language}}</label>{%endif%}
-            {% if i.fork %}<label class="label label-warning">Fork</label>{% endif %}
-            <a href="{{i.url}}">{{i.name}}</a> / {{i.updated_at}} / {{i.pushed_at}}
-                <ul>
-                    <li>{{i.description}}</li>
-                    <li><a href="{{i.html_url}}">{{i.html_url}}</a></li>
-                </ul>
-            </li>
-        {% endfor %}
-        </ol>
     </div>
 </div>
 
