@@ -29,6 +29,10 @@
         <p>
             {{result['bio']}}
         </p>
+        <p>
+            {%if result['hireable'] %}<label class="label label-info">Hireable</label>{% endif %}
+            {%if result['site_admin'] %}<label class="label label-info">Site Admin</label>{% endif %}
+        </p>
     </div>
 </div>
 <div class="panel panel-info">
@@ -58,12 +62,12 @@
     <div class="panel-body">
         <ol>
         {% for i in result['repos_list']%}
-        <li>{% if i.language %}<label class="label label-success">{{i.language}}</label>{%endif%} <a href="{{i.url}}">{{i.name}}</a> / {{i.updated_at}} / {{i.pushed_at}}
+        <li>{% if i.language %}<label class="label label-success">{{i.language}}</label>{%endif%}
+            {% if i.fork %}<label class="label label-warning">Fork</label>{% endif %}
+            <a href="{{i.url}}">{{i.name}}</a> / {{i.updated_at}} / {{i.pushed_at}}
                 <ul>
                     <li>{{i.description}}</li>
-                    {% if i.fork %}
-                        <li>Forked from {{i.full_name}}</li>
-                    {% endif %}
+                    <li><a href="{{i.html_url}}">{{i.html_url}}</a></li>
                 </ul>
             </li>
         {% endfor %}
@@ -77,7 +81,7 @@
     </div>
     <div class="panel-body">
     {% for i in result%}
-        <b>{{i}}</b> / {{result[i]}}<br>
+        <b>{{i}}</b> / <pre>{{result[i]}}</pre><br>
     {% endfor %}
     </div>
 </div>
