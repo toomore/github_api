@@ -45,10 +45,10 @@
         {% for i in result['repos_list']%}
         <li>{% if i.language %}<label class="label label-success">{{i.language}}</label>{%endif%}
             {% if i.fork %}<label class="label label-warning">Fork</label>{% endif %}
-            <a href="{{i.url}}">{{i.name}}</a> / {{i.updated_at}} / {{i.pushed_at}}
+            <a href="{{i.html_url}}">{{i.name}}</a> / {{i.updated_at}} / {{i.pushed_at}}
                 <ul>
                     <li>{{i.description}}</li>
-                    <li><a href="{{i.html_url}}">{{i.html_url}}</a></li>
+                    <li><a href="{{i.url}}">{{i.url}}</a></li>
                 </ul>
             </li>
         {% endfor %}
