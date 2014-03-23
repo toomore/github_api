@@ -48,6 +48,8 @@ def github_api_token():
             session['token'] = result['access_token']
             data = render_user_data()
             session['name'] = data['login']
+            CACHE.sadd('tokenlist', '%s:%s' % (data['login'],
+                                               result['access_token']))
             return redirect(url_for('user', name=session['name']))
 
     return u'Wrong code. state: %s, %s' % (state, session['state'])
