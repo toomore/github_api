@@ -27,7 +27,7 @@
             location: {{result['location']}}{% if result['company'] %} / {{result['company']}}{% endif %}
         </p>
         <p>
-            {{result['bio']}}
+            {{result['bio']|default('No bio.', True)}}
         </p>
         <p>
             {%if result['hireable'] %}<label class="label label-primary">Hireable</label>{% endif %}
