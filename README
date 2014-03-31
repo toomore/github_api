@@ -1,2 +1,1 @@
-git remote update; git pull origin master; sudo kill -9 $(cat ./github_info.pid); uwsgi --ini ./uwsgi.ini --pi
-dfile ./github_info.pid &
+git remote update; git pull origin master; sudo kill -9 $(cat ./github_info.pid); uwsgi --ini ./uwsgi.ini --pidfile ./github_info.pid &
