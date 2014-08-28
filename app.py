@@ -123,7 +123,7 @@ def user(name):
         return render_template('user.html', result=result)
     else:
         #return redirect(url_for('login'))
-        result = u'Please Login!'
+        result = u'Please <a href="/user">Login!</a>'
 
     return result
 
