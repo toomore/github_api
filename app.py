@@ -28,6 +28,10 @@ def most_common(data, n=None):
     data = Counter(data)
     return [language for language, value in data.most_common(n)]
 
+@app.route("/")
+def home():
+    return u'<a href="%s">Login</a>' % url_for('login')
+
 @app.route("/login")
 def login():
     session['state'] = uuid4().hex
