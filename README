@@ -1,1 +1,3 @@
 git remote update; git pull origin master; sudo kill -9 $(cat ./github_info.pid); uwsgi --ini ./uwsgi.ini --pidfile ./github_info.pid &
+
+Need more cache for speed.
